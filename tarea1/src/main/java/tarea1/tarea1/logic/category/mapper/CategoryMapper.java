@@ -21,3 +21,4 @@ public interface CategoryMapper {
 
     CategoryResponse toResponse(Category entity);
 }
+
