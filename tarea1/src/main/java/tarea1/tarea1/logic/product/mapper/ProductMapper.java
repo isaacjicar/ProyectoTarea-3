@@ -16,11 +16,9 @@ public abstract class ProductMapper {
     @Autowired
     protected CategoryRepository categoryRepository;
 
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "category", source = "categoryId")
     public abstract Product toEntity(ProductCreateRequest dto);
-
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
@@ -28,16 +26,13 @@ public abstract class ProductMapper {
     public abstract void updateEntity(@MappingTarget Product product, ProductUptadeRequest dto);
 
 
-    @Mapping(target = "category", expression = "java(product.getCategory().getName())")
+    @Mapping(target = "categoryId", source = "category.id")
+    @Mapping(target = "category", source = "category.name")
     public abstract ProductResponse toResponse(Product product);
 
     protected Category map(Long id) {
         if (id == null) return null;
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Categoria no existe con id=" + id));
-    }
-
-    protected Long map(Category category) {
-        return category == null ? null : category.getId();
     }
 }

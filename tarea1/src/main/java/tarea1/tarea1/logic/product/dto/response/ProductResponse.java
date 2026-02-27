@@ -14,6 +14,6 @@ public class ProductResponse {
     private BigDecimal price;
     private int stockQuantity;
 
-    private long categoryId;
+    private Long categoryId;
     private String category;
 }
