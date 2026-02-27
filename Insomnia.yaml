@@ -1,0 +1,547 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Tarea#1 Proyecto#3 - CRUD + JWT
+meta:
+  id: wrk_7ddffbeb6f42499da3290f832ce3fb7b
+  created: 1772217467943
+  modified: 1772217467943
+  description: ""
+collection:
+  - name: Tarea#1 Proyecto#3 - CRUD + JWT
+    meta:
+      id: fld_d9d3c95e0fb5434aba7e58425a605cd2
+      created: 1772217467944
+      modified: 1772218019875
+      sortKey: -1772217466722
+      description: ""
+    children:
+      - name: Auth
+        meta:
+          id: fld_2fcf90869ee347d387eedb857ec44dd5
+          created: 1772217467945
+          modified: 1772217655836
+          sortKey: -1772217466721
+          description: ""
+        children:
+          - url: "{{baseUrl}}/auth/login"
+            name: Login Admin
+            meta:
+              id: req_d69546cae2c040e58f430c3580946a52
+              created: 1772217467946
+              modified: 1772217467946
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466720
+            method: POST
+            body:
+              mimeType: text/plain
+              text: |-
+                {
+                 "email": "super.admin@gmail.com",
+                 "password": "superadmin123"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            scripts:
+              afterResponse: >-
+                insomnia.test('200 OK', () =>
+                insomnia.response.to.have.status(200));
+
+                const json = insomnia.response.json();
+
+                insomnia.collectionVariables.set('token_admin', json.token);
+
+                insomnia.collectionVariables.set('admin_email', json.email);
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/auth/login"
+            name: Login User
+            meta:
+              id: req_f0df7b453308486d8876acec0a26a093
+              created: 1772217467947
+              modified: 1772217467947
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466719
+            method: POST
+            body:
+              mimeType: text/plain
+              text: |-
+                {
+                 "email": "user@gmail.com",
+                 "password": "user123"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            scripts:
+              afterResponse: >-
+                insomnia.test('200 OK', () =>
+                insomnia.response.to.have.status(200));
+
+                const json = insomnia.response.json();
+
+                insomnia.collectionVariables.set('token_user', json.token);
+
+                insomnia.collectionVariables.set('user_email', json.email);
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: Category
+        meta:
+          id: fld_77a9d7fd45014c06b03bf24416440fc3
+          created: 1772217467948
+          modified: 1772217979564
+          sortKey: -1772217466718
+          description: ""
+        children:
+          - url: "{{baseUrl}}/category"
+            name: List (ADMIN)
+            meta:
+              id: req_1f9eccc291a540c98e94bc5e06422f12
+              created: 1772217467949
+              modified: 1772217467949
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466717
+            method: GET
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_admin}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/category"
+            name: List (USER)
+            meta:
+              id: req_2fe90ad45af6415b86f3bc61244437fa
+              created: 1772217467950
+              modified: 1772217467950
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466716
+            method: GET
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_user}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/category"
+            name: Create (ADMIN)
+            meta:
+              id: req_1ccd17441f3d4ad6bf61cf50b837d097
+              created: 1772217467951
+              modified: 1772217976789
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466715
+            method: POST
+            body:
+              mimeType: text/plain
+              text: |-
+                {
+                 "name": "pagina",
+                 "descripcion": "Categoria de sillas"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_admin}}"
+              prefix: ""
+            scripts:
+              afterResponse: >-
+                insomnia.test('201/200', () =>
+                insomnia.expect([200,201]).to.include(insomnia.response.code));
+
+                const json = insomnia.response.json();
+
+                if (json.id) insomnia.collectionVariables.set('categoryId',
+                json.id);
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/category"
+            name: Create (USER) - should be 403
+            meta:
+              id: req_d1d62f6ef38e418592458d11c598cff6
+              created: 1772217467951
+              modified: 1772217467951
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466714
+            method: POST
+            body:
+              mimeType: text/plain
+              text: |-
+                {
+                 "name": "Prohibido",
+                 "description": "Debe fallar"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_user}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/category/{{categoryId}}"
+            name: Find By Id (ADMIN)
+            meta:
+              id: req_ab8e761193ba48d488cbce6ede8ac741
+              created: 1772217467952
+              modified: 1772217467952
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466713
+            method: GET
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_admin}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/category/{{categoryId}}"
+            name: Update (ADMIN)
+            meta:
+              id: req_57ba4500b48b477ba2316813479f9a56
+              created: 1772217467954
+              modified: 1772217467954
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466712
+            method: PUT
+            body:
+              mimeType: text/plain
+              text: |-
+                {
+                 "name": "Sillas Premium",
+                 "description": "Actualizada"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_admin}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/category/{{categoryId}}"
+            name: Delete (ADMIN)
+            meta:
+              id: req_db3376eb4f4a4000931246085c1e2881
+              created: 1772217467954
+              modified: 1772217467954
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466711
+            method: DELETE
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_admin}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: Product
+        meta:
+          id: fld_bdff7f08182c4877bef8f4278fb9f260
+          created: 1772217467955
+          modified: 1772218019875
+          sortKey: -1772217466710
+          description: ""
+        children:
+          - url: "{{baseUrl}}/products"
+            name: List (ADMIN)
+            meta:
+              id: req_5327c3326ccd48f1939034f3cae3a422
+              created: 1772217467956
+              modified: 1772217467956
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466709
+            method: GET
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_admin}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/products"
+            name: List (USER)
+            meta:
+              id: req_15109641f6594f2f80ccda342b96a4d6
+              created: 1772217467957
+              modified: 1772217467957
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466708
+            method: GET
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_user}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/products"
+            name: Create (ADMIN)
+            meta:
+              id: req_0a267dbf1aad464e9049a540c3446660
+              created: 1772217467958
+              modified: 1772217467958
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466707
+            method: POST
+            body:
+              mimeType: text/plain
+              text: |-
+                {
+                 "name": "Silla Gamer",
+                 "descripcion": "Silla ergonomica",
+                 "price": 150.00,
+                 "stockQuantity": 5,
+                 "categoryId": {{categoryId}}
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_admin}}"
+              prefix: ""
+            scripts:
+              afterResponse: >-
+                insomnia.test('201/200', () =>
+                insomnia.expect([200,201]).to.include(insomnia.response.code));
+
+                const json = insomnia.response.json();
+
+                if (json.id) insomnia.collectionVariables.set('productId',
+                json.id);
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/products"
+            name: Create (USER) - should be 403
+            meta:
+              id: req_e09da58b4a87401892ad4895e1dac747
+              created: 1772217467959
+              modified: 1772217467959
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466706
+            method: POST
+            body:
+              mimeType: text/plain
+              text: |-
+                {
+                 "name": "Prohibido",
+                 "descripcion": "Debe fallar",
+                 "price": 1.00,
+                 "stockQuantity": 1,
+                 "categoryId": {{categoryId}}
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_user}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/products/{{productId}}"
+            name: Update (ADMIN)
+            meta:
+              id: req_31eb69a198b4419798beff8a49dac970
+              created: 1772217467960
+              modified: 1772217467960
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466704
+            method: PUT
+            body:
+              mimeType: text/plain
+              text: |-
+                {
+                 "name": "Silla Gamer Pro",
+                 "descripcion": "Actualizada",
+                 "price": 199.99,
+                 "stockQuantity": 10,
+                 "categoryId": {{categoryId}}
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_admin}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/products/{{productId}}"
+            name: Find By Id (ADMIN)
+            meta:
+              id: req_ed627a23297d49699b5beb6f3d50f91a
+              created: 1772217467960
+              modified: 1772217467960
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466705
+            method: GET
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_admin}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{baseUrl}}/products/{{productId}}"
+            name: Delete (ADMIN)
+            meta:
+              id: req_636d3514b7b34682adf7f2e387ee445e
+              created: 1772217467961
+              modified: 1772217467961
+              isPrivate: false
+              description: ""
+              sortKey: -1772217466703
+            method: DELETE
+            authentication:
+              type: bearer
+              disabled: false
+              token: "{{token_admin}}"
+              prefix: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_2c64c1c90f2fb3cf1a54e67273aac06ed0f055d2
+    created: 1772217467965
+    modified: 1772218019873
+environments:
+  name: Variables
+  meta:
+    id: env_ee5affdc35954d0e834284d74a6cea65
+    created: 1772217467962
+    modified: 1772218019874
+    isPrivate: false
+  data:
+    baseUrl: http://localhost:8080/api/v1
+    token_admin: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdXBlci5hZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJTVVBFUi1BRE1JTi1ST0xFIl0sImlhdCI6MTc3MjIxNzY1NSwiZXhwIjoxNzcyMjIxMjU1fQ.0-SoDLhnrXyqQfWlkEhqCmc5ISCrhlW-AM4kCFAb_9s
+    token_user: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGdtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaWF0IjoxNzcyMjE3NTIxLCJleHAiOjE3NzIyMjExMjF9.Vn2t4InHF0cTJ3SuDKy1OJ6pDHHOoewNxV75-my1SIw
+    categoryId: 1
+    productId: 1
+    admin_email: super.admin@gmail.com
+    user_email: user@gmail.com
