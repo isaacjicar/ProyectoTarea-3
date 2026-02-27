@@ -1,0 +1,658 @@
+{
+  "info": {
+    "_postman_id": "cd9afd96-1fad-4d08-8518-55eeed6fb8e1",
+    "name": "Tarea#1 Proyecto#3 - CRUD + JWT",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "f8cd420d-38ee-4815-bf42-a2e7aa2e45f1",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('token_admin', json.token);",
+                  "pm.collectionVariables.set('admin_email', json.email);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "22ca26f1-1d62-4bba-8af2-9462cc2ad22f",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "id": "d222beaf-5659-4ce5-be7a-295949b2ca83",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n \"email\": \"super.admin@gmail.com\",\n \"password\": \"superadmin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "419dd3c5-e2ea-4caa-bfff-da8437083660",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('token_user', json.token);",
+                  "pm.collectionVariables.set('user_email', json.email);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "ea25c320-c644-4e51-9d46-d0da72522dfc",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "id": "786daeb0-3ef3-43c3-85b9-3e5db62e68e8",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n \"email\": \"user@gmail.com\",\n \"password\": \"user123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "abd678cd-2468-4f1a-b6bd-61294bab15a9"
+    },
+    {
+      "name": "Category",
+      "item": [
+        {
+          "name": "List (ADMIN)",
+          "id": "b7d281c1-a04a-46a4-a2d1-94bd0180b6ef",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_admin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/category",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "category"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List (USER)",
+          "id": "0e43e15c-9c38-4166-a095-7832f1a4d33c",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_user}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/category",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "category"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201/200', () => pm.expect([200,201]).to.include(pm.response.code));",
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('categoryId', json.id);"
+                ],
+                "type": "text/javascript",
+                "id": "ea6d373e-a4ef-452b-9183-edae648604fa"
+              }
+            }
+          ],
+          "id": "b8dc42a7-8ae8-493a-9fbf-cb40ce6cbd6a",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_admin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n \"name\": \"Sillas\",\n \"description\": \"Categoria de sillas\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/category",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "category"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create (USER) - should be 403",
+          "id": "0b690a0d-2bf3-41ce-9868-37bf52d9d955",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_user}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n \"name\": \"Prohibido\",\n \"description\": \"Debe fallar\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/category",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "category"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Find By Id (ADMIN)",
+          "id": "bf44e01d-2beb-403c-955a-2425d6bb69c6",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_admin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/category/{{categoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "category",
+                "{{categoryId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update (ADMIN)",
+          "id": "c9bdeecd-ea48-41c2-bab2-76a64e3c487b",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_admin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n \"name\": \"Sillas Premium\",\n \"description\": \"Actualizada\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/category/{{categoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "category",
+                "{{categoryId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete (ADMIN)",
+          "id": "8e2d6e4b-5c63-4b33-b407-8c7d2d80f352",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_admin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/category/{{categoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "category",
+                "{{categoryId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "35a7b2fe-95e2-4f58-a025-8ad746148292"
+    },
+    {
+      "name": "Product",
+      "item": [
+        {
+          "name": "List (ADMIN)",
+          "id": "7489d20f-47af-4005-9438-0ac76d98a6f7",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_admin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List (USER)",
+          "id": "7efa2de3-c7c2-45e1-b620-16823682b70e",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_user}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201/200', () => pm.expect([200,201]).to.include(pm.response.code));",
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('productId', json.id);"
+                ],
+                "type": "text/javascript",
+                "id": "683e2775-cbc9-4ea5-a02c-72c36e98ee56"
+              }
+            }
+          ],
+          "id": "96e9366a-4fcf-40b8-a1ff-7c356676d2ae",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_admin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n \"name\": \"Silla Gamer\",\n \"descripcion\": \"Silla ergonomica\",\n \"price\": 150.00,\n \"stockQuantity\": 5,\n \"categoryId\": {{categoryId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create (USER) - should be 403",
+          "id": "3dabd6c1-e9ad-4fe5-bd1c-9d6b839aad76",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_user}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n \"name\": \"Prohibido\",\n \"descripcion\": \"Debe fallar\",\n \"price\": 1.00,\n \"stockQuantity\": 1,\n \"categoryId\": {{categoryId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Find By Id (ADMIN)",
+          "id": "d30dbd9a-8d01-4d8a-83c9-ebb351f20f7c",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_admin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update (ADMIN)",
+          "id": "4f7f7671-456b-401e-a708-1481104fd553",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_admin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n \"name\": \"Silla Gamer Pro\",\n \"descripcion\": \"Actualizada\",\n \"price\": 199.99,\n \"stockQuantity\": 10,\n \"categoryId\": {{categoryId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete (ADMIN)",
+          "id": "77450fc6-aa9b-41d6-a96c-86c0e92d2928",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_admin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "a526d43e-9af1-4ec0-b683-3b9730e112c4"
+    }
+  ],
+  "variable": [
+    {
+      "id": "39285a10-ae96-42ef-9192-467dcd151759",
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1"
+    },
+    {
+      "id": "7832ac55-776f-4e04-b1bf-befc2e71b165",
+      "key": "token_admin",
+      "value": ""
+    },
+    {
+      "id": "3b994a87-c0f0-4db6-a2b2-ab8fcea36ace",
+      "key": "token_user",
+      "value": ""
+    },
+    {
+      "id": "a05d489e-2eef-448c-b08d-1a40739a5f03",
+      "key": "categoryId",
+      "value": ""
+    },
+    {
+      "id": "61ab0a82-4f2b-4267-aae4-cc07a883d3e5",
+      "key": "productId",
+      "value": ""
+    },
+    {
+      "id": "1c6a84ff-d190-4919-a2b1-3187e73fd908",
+      "key": "admin_email",
+      "value": ""
+    },
+    {
+      "id": "ed2682e3-0e0c-4888-8727-e31cf8a49e72",
+      "key": "user_email",
+      "value": ""
+    }
+  ]
+}
